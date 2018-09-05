@@ -6,9 +6,8 @@
 # Description:
 #########################################################################
 
-
-
 from module import *
+
 
 def str2float(s):
     if s == ".":
@@ -20,8 +19,11 @@ def str2float(s):
 
 
 def mutype():
-    return ["Frame_Shift_Del", "Frame_Shift_Ins", "In_Frame_Del", "In_Frame_Ins", "Missense_Mutation",
-            "Nonsense_Mutation", "Nonstop_Mutation", "Splice_Site", "Translation_Start_Site", ""]
+    return [
+        "Frame_Shift_Del", "Frame_Shift_Ins", "In_Frame_Del", "In_Frame_Ins",
+        "Missense_Mutation", "Nonsense_Mutation", "Nonstop_Mutation",
+        "Splice_Site", "Translation_Start_Site", ""
+    ]
 
 
 def symbol():
@@ -33,22 +35,22 @@ def biotype():
 
 
 def ald2bias(ALD):
-    rad, lad = map(float,ALD.split(","))
-    return rad/(rad+lad)
+    rad, lad = map(float, ALD.split(","))
+    return rad / (rad + lad)
 
 
 def popfiltered(frequency, poplis):
-    if len(filter(lambda x:x>=frequency, map(str2float, poplis))):
+    if len(filter(lambda x: x >= frequency, map(str2float, poplis))):
         return False
     else:
         return True
 
 
-def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean, totalAC, LAC,
-              tad_hot, totalAC_hot, LAC_hot):
+def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean,
+              totalAC, LAC, tad_hot, totalAC_hot, LAC_hot):
 
-    dic, header = txt2dic(inmaf, headidx=0, keyidx=[5,6,11,13])
-    print "Commons\t"+"\t".join(header)
+    dic, header = txt2dic(inmaf, headidx=0, keyidx=[5, 6, 11, 13])
+    print "Commons\t" + "\t".join(header)
     for key, val in dic.items():
         commons = []
 
@@ -58,7 +60,10 @@ def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean, totalAC,
         ndepth = int(val["n_depth"])
         symbol_source = val["SYMBOL_SOURCE"]
         Biotype = val["BIOTYPE"]
-        poplis = [val["AF"], val["EAS_AF"], val["ExAC_AF"], val["ExAC_AF_EAS"], val["gnomAD_AF"], val["gnomAD_EAS_AF"]]
+        poplis = [
+            val["AF"], val["EAS_AF"], val["ExAC_AF"], val["ExAC_AF_EAS"],
+            val["gnomAD_AF"], val["gnomAD_EAS_AF"]
+        ]
         var_qual = str2float(val["variant_qual"])
         msi = float(val["MSI"])
         msi2 = val["MSI2"]
@@ -69,7 +74,6 @@ def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean, totalAC,
         Lac = str2float(val["LAC"])
         NM = float(val["NM"])
         MQ = float(val["MQ"])
-
 
         # hotspot(cosmic CNT >= 20)
         if Cnt >= 20:
@@ -98,7 +102,7 @@ def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean, totalAC,
             commons.append("varqual")
         if msi2 != "PASS":
             commons.append("MSI2")
-        if Bias < bias or Bias > (1-bias):
+        if Bias < bias or Bias > (1 - bias):
             commons.append("BIAS")
         if Pmean < pmean:
             commons.append("PMEAN")
@@ -120,13 +124,11 @@ def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean, totalAC,
         if not commons:
             commons.append("PASS")
 
-
         lis = []
         lis.append(";".join(commons))
         for h in header:
             lis.append(val[h])
         print "\t".join(lis)
-
 
 
 if __name__ == "__main__":
@@ -135,4 +137,3 @@ if __name__ == "__main__":
         print "py inmaf"
         exit(1)
     filtermaf(sys.argv[1], 0.01, 20, 4, 15, 70, 8, 0.1, 25, 20, 10, 3, 50, 20)
-
