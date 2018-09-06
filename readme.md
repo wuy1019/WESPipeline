@@ -1,6 +1,6 @@
 # WES Pipeline
 
-### 文件夹说明
+## 文件夹说明
 
 - bedfiles: WES 相关bed 文件
 - databases: 相关数据库
