@@ -4,6 +4,7 @@
 # Copyright: GENESEEQ Technology Inc. All rights reserved.
 # Description:
 #########################################################################
+import ConfigParser as configparser
 import csv
 import re
 from collections import Counter, defaultdict
@@ -115,7 +116,7 @@ def annovarcmd(invcf, convert2annovar, table_annovar, annovardb):
     avinput = "%s/%s.hc.anoinput" % (tmpdir, sample)
     annotxt = "%s/%s.hc.hg19_multianno.txt" % (tmpdir, sample)
     cmd1 = "perl %s \
-            -format vcf4  %s > %s " % (convert2annovar, invcf, avinput)
+            -format vcf4  %s > %s "                                    % (convert2annovar, invcf, avinput)
 
     cmd2 = "%s \
             %s \
@@ -123,8 +124,8 @@ def annovarcmd(invcf, convert2annovar, table_annovar, annovardb):
             -buildver hg19 -protocol \
             refGene,snp138,snp138NonFlagged,cosmic70,clinvar_20160302,popfreq_all_20150413,gnomad_genome,gnomad_exome,ljb26_all  \
             -operation g,f,f,f,f,f,f,f,f         -nastring .    \
-            -remove -out %s/%s.hc" % (table_annovar, avinput, annovardb, tmpdir,
-                                      sample)
+            -remove -out %s/%s.hc"                                   % (table_annovar, avinput, annovardb,
+                                      tmpdir, sample)
     return " && ".join([cmd1, cmd2]), avinput, annotxt
 
 
@@ -139,11 +140,11 @@ def vepcmd(invcf, veppath, ref, vepdb, scriptpath):
             --shift_hgvs 1 --force_overwrite   --everything  \
             --fasta %s \
             --refseq --dir %s \
-            --offline  --buffer_size 25000 --species homo_sapiens" % (
+            --offline  --buffer_size 25000 --species homo_sapiens"                                                                   % (
         veppath, invcf, tmpdir, sample, ref, vepdb)
 
     cmd2 = "%s/veparse.py %s/%s.hc.vepoutput \
-            > %s" % (scriptpath, tmpdir, sample, vepcsv)
+            > %s"                  % (scriptpath, tmpdir, sample, vepcsv)
 
     return " && ".join([cmd1, cmd2]), vepcsv
 
@@ -153,10 +154,18 @@ def intervar(avinput, intervardir):
     tmpdir = "TMP/%s" % sample
     interout = "%s/%s.hc.inter.hg19_multianno.txt.intervar" % (tmpdir, sample)
     cmd = "%s/Intervar.py -c %s/config.ini \
-    -i %s -o %s/%s.hc.inter" % (intervardir, intervardir, avinput, tmpdir,
+    -i %s -o %s/%s.hc.inter"                             % (intervardir, intervardir, avinput, tmpdir,
                                 sample)
 
     return cmd, interout
+
+
+def combineanno(scriptpath, vcf_file, annovar, vep, intervar, omim, hgmd,
+                output):
+
+    cmd = "%s/combineanno.py %s %s %s %s %s %s > \
+    %s" % (scriptpath, vcf_file, annovar, vep, intervar, omim, hgmd, output)
+    return cmd, output
 
 
 def tsvparse(tsv):

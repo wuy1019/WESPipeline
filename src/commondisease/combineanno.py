@@ -6,8 +6,8 @@
 # Description:
 #########################################################################
 
-import parse
-from parse import cut
+import module
+from module import cut
 
 
 def ref_alt(ref, alt):
@@ -24,26 +24,27 @@ def ref_alt(ref, alt):
 
 def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd):
     #def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim):
-    dic = parse.Ddict()
-    header = parse.header()
-    annovardic = parse.tsvparse2(
+    dic = module.Ddict()
+    header = module.header()
+    annovardic = module.tsvparse2(
         annovar,
         keyidx=[0, 1, 3,
                 4])  #chrom with chr string; key = "chrom,start,end,ref,alt"
-    rawvep = parse.vep(
+    rawvep = module.vep(
         vep)  #chrom with chr string; key = "chrom,start,ref,alt,hgvs"
-    rawinter = parse.parseintervar(
+    rawinter = module.parseintervar(
         intervar)  #chrom without chr string; key = "chrom,start,ref,alt"
-    hgmd_snp, hgmd_indel = parse.parsehgmd(hgmd)  #
-    hgmd_gene2tran = parse.hgmdgene2trans(hgmd)  # key: gene, val: trans
-    rawomim = parse.parsegenemap2ClnSynopsis(omim, key="Symbol")  # key = gene,
+    hgmd_snp, hgmd_indel = module.parsehgmd(hgmd)  #
+    hgmd_gene2tran = module.hgmdgene2trans(hgmd)  # key: gene, val: trans
+    rawomim = module.parsegenemap2ClnSynopsis(
+        omim, key="Symbol")  # key = gene,
     #print rawomim
-    vcfdic_raw = parse.hcvcf2dic(
+    vcfdic_raw = module.hcvcf2dic(
         vcf_file
     )  #chrom with chr string; key = (chrom, pos, ref, alt), vcf file raw value
 
     #parse vcf file
-    vcfdic = parse.Ddict()
+    vcfdic = module.Ddict()
     for key in vcfdic_raw:
         chrom, pos, ref, alt = key
         Ref, Alt = ref_alt(ref, alt)
@@ -68,7 +69,7 @@ def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd):
         #if int(Pos) == 16327915:
         #    print vcfkey, vcfdic[vcfkey]
     #parse vep file
-    vepdic = parse.Ddict()
+    vepdic = module.Ddict()
     vepkeydic = {}
     for key in rawvep:
         tmp = ",".join(key.split(",")[:4])
@@ -88,7 +89,7 @@ def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd):
             hgvss.append(rawvep[v][2])
             types.append(rawvep[v][1])
             exons.append(rawvep[v][3])
-        vepdic[key]["Gene"] = ";".join(parse.uniqlist(genes))
+        vepdic[key]["Gene"] = ";".join(module.uniqlist(genes))
         vepdic[key]["HGVS"] = ";".join(hgvss)
         vepdic[key]["Mutation_type"] = ";".join(types)
         vepdic[key]["ExonNum"] = ";".join(exons)
@@ -152,7 +153,7 @@ def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd):
                 dic[key]["geneMIM"] = ";".join(geneMIMs)
             if Inheritances:
                 dic[key]["Inheritance"] = ";".join(
-                    parse.uniqlist(map(parse.capital, Inheritances)))
+                    module.uniqlist(map(module.capital, Inheritances)))
             if clinicalSynopsiss:
                 tmp = ""
                 for i in range(1, len(clinicalSynopsiss) + 1):
@@ -174,33 +175,34 @@ def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd):
         hgmd_chr = key.split(",")[0].lstrip("chr")
         hgmd_pos = key.split(",")[1]
         dic[key]["HGMD_mutation_type"], dic[key]["HGMD_variant_class"], dic[
-            key]["HGMD_disease"], dic[key]["HGMD_pubmed_ID"] = parse.hgmdpos(
+            key]["HGMD_disease"], dic[key]["HGMD_pubmed_ID"] = module.hgmdpos(
                 hgmd_chr, hgmd_pos, "0", hgmd_snp)
         dic[key]["HGMD_indel_type"], dic[key]["HGMD_Indel_class"], dic[key][
-            "HGMD_indel_disease"], dic[key]["HGMD_indel_PMID"] = parse.hgmdpos(
-                hgmd_chr, hgmd_pos, "0", hgmd_indel)
+            "HGMD_indel_disease"], dic[
+                key]["HGMD_indel_PMID"] = module.hgmdpos(
+                    hgmd_chr, hgmd_pos, "0", hgmd_indel)
 
         #distance 1
-        snp_dis1 = ",".join(parse.hgmdpos(chrom, pos, "1", hgmd_snp))
-        snp_dis_1 = ",".join(parse.hgmdpos(chrom, pos, "-1", hgmd_snp))
-        indel_dis1 = ",".join(parse.hgmdpos(chrom, pos, "1", hgmd_indel))
-        indel_dis_1 = ",".join(parse.hgmdpos(chrom, pos, "-1", hgmd_indel))
+        snp_dis1 = ",".join(module.hgmdpos(chrom, pos, "1", hgmd_snp))
+        snp_dis_1 = ",".join(module.hgmdpos(chrom, pos, "-1", hgmd_snp))
+        indel_dis1 = ",".join(module.hgmdpos(chrom, pos, "1", hgmd_indel))
+        indel_dis_1 = ",".join(module.hgmdpos(chrom, pos, "-1", hgmd_indel))
 
         #distance 2
-        snp_dis2 = ",".join(parse.hgmdpos(chrom, pos, "2", hgmd_snp))
-        snp_dis_2 = ",".join(parse.hgmdpos(chrom, pos, "-2", hgmd_snp))
-        indel_dis2 = ",".join(parse.hgmdpos(chrom, pos, "2", hgmd_indel))
-        indel_dis_2 = ",".join(parse.hgmdpos(chrom, pos, "-2", hgmd_indel))
+        snp_dis2 = ",".join(module.hgmdpos(chrom, pos, "2", hgmd_snp))
+        snp_dis_2 = ",".join(module.hgmdpos(chrom, pos, "-2", hgmd_snp))
+        indel_dis2 = ",".join(module.hgmdpos(chrom, pos, "2", hgmd_indel))
+        indel_dis_2 = ",".join(module.hgmdpos(chrom, pos, "-2", hgmd_indel))
 
         #distance 3
-        snp_dis3 = ",".join(parse.hgmdpos(chrom, pos, "3", hgmd_snp))
-        snp_dis_3 = ",".join(parse.hgmdpos(chrom, pos, "-3", hgmd_snp))
-        indel_dis3 = ",".join(parse.hgmdpos(chrom, pos, "3", hgmd_indel))
-        indel_dis_3 = ",".join(parse.hgmdpos(chrom, pos, "-3", hgmd_indel))
+        snp_dis3 = ",".join(module.hgmdpos(chrom, pos, "3", hgmd_snp))
+        snp_dis_3 = ",".join(module.hgmdpos(chrom, pos, "-3", hgmd_snp))
+        indel_dis3 = ",".join(module.hgmdpos(chrom, pos, "3", hgmd_indel))
+        indel_dis_3 = ",".join(module.hgmdpos(chrom, pos, "-3", hgmd_indel))
 
-        dis1 = parse.uniqlist([snp_dis1, snp_dis_1, indel_dis1, indel_dis_1])
-        dis2 = parse.uniqlist([snp_dis2, snp_dis_2, indel_dis2, indel_dis_2])
-        dis3 = parse.uniqlist([snp_dis3, snp_dis_3, indel_dis3, indel_dis_3])
+        dis1 = module.uniqlist([snp_dis1, snp_dis_1, indel_dis1, indel_dis_1])
+        dis2 = module.uniqlist([snp_dis2, snp_dis_2, indel_dis2, indel_dis_2])
+        dis3 = module.uniqlist([snp_dis3, snp_dis_3, indel_dis3, indel_dis_3])
         dis1.remove(".,.,.,.")
         dis2.remove(".,.,.,.")
         dis3.remove(".,.,.,.")
@@ -217,6 +219,19 @@ def genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd):
     return dic
 
 
+def writeanno(vcf_file, annovar, vep, intervar, omim, hgmd, output):
+    w = open(output, "w")
+    dic = genetic_anno_combine(vcf_file, annovar, vep, intervar, omim, hgmd)
+    header = module.header()
+    w.write("\t".join(header) + "\n")
+    for key, val in dic.items():
+        lis = []
+        for i in header:
+            lis.append(val[i])
+        w.write("\t".join(map(str, lis) + "\n"))
+    w.close()
+
+
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 3:
@@ -225,7 +240,7 @@ if __name__ == "__main__":
     t = sys.argv
     dic = genetic_anno_combine(t[1], t[2], t[3], t[4], t[5], t[6])
 
-    header = parse.header()
+    header = module.header()
     print "\t".join(header)
     for key, val in dic.items():
         lis = []
