@@ -1,0 +1,8 @@
+Chr.Start	Chr.End	Ref	Alt	Sitetype	chemicals	gene	type	level of evidence	phenotypes	Gene IDs	Gene Symbols	Location	VA count	CA count	Level 1/2 CA count	DG count	Haplotype	Synonyms	Variant ID	Gene Symbol	Label IDs	Label Names	PharmGKB Accession Id	Generic Names	Trade Names	Brand Mixtures	Cross-references	Dosing Guideline	Dosing Guideline Sources	Top FDA Label Testing Level	Top Any Drug Label Testing Level	Source ID
+.	.	.	.	RRM1 mutant	gemcitabine	RRM1	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	17602053;20226083
+.	.	.	.	MGMT mutant	Temozolomide	MGMT	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	23958055;15758010
+.	.	.	.	ERCC1 mutant	platinum	ERCC1	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	28796378;22329723;28796378
+.	.	.	.	BRCA1 mutant	platinum	BRCA1	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	27779244
+.	.	.	.	TP53 mutant	platinum	TP53	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	18230133;25385265
+.	.	.	.	TOP2A mutant	anthracyclines	TOP2A	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	21917518;22864769
+.	.	.	.	TP53 mutant	fluorouracil	TP53	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	26425688;26425688
