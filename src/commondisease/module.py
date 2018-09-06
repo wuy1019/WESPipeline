@@ -109,23 +109,23 @@ def hccmd(inbam, java, javatmp_dir, gatk, ref, target, outdir="Results"):
     return cmd, outvcf
 
 
-def annovarcmd(invcf, annovardir, annovardb):
+def annovarcmd(invcf, convert2annovar, table_annovar, annovardb):
     sample = file2sampleid(invcf)
     tmpdir = "TMP/%s" % sample
     avinput = "%s/%s.hc.anoinput" % (tmpdir, sample)
     annotxt = "%s/%s.hc.hg19_multianno.txt" % (tmpdir, sample)
-    cmd1 = "perl %s/convert2annovar.pl\
-            -format vcf4  %s > %s " % (annovardir, invcf, avinput)
+    cmd1 = "perl %s \
+            -format vcf4  %s > %s " % (convert2annovar, invcf, avinput)
 
-    cmd2 = "%s/table_annovar.pl \
+    cmd2 = "%s \
             %s \
             %s \
             -buildver hg19 -protocol \
             refGene,snp138,snp138NonFlagged,cosmic70,clinvar_20160302,popfreq_all_20150413,gnomad_genome,gnomad_exome,ljb26_all  \
             -operation g,f,f,f,f,f,f,f,f         -nastring .    \
-            -remove -out %s/%s.hc" % (annovardir, avinput, annovardb, tmpdir,
+            -remove -out %s/%s.hc" % (table_annovar, avinput, annovardb, tmpdir,
                                       sample)
-    return " && ".join([cmd1, cmd2]), annotxt
+    return " && ".join([cmd1, cmd2]), avinput, annotxt
 
 
 def vepcmd(invcf, veppath, ref, vepdb, scriptpath):
