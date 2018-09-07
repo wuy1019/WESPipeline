@@ -30,7 +30,7 @@ def checkFile(fileToCheck):
 
 
 def readconfig(inifile):
-    config = Configparser.ConfigParser()
+    config = ConfigParser.ConfigParser()
     config.read(inifile)
     config.read(config.get("common", "config"))
     return config

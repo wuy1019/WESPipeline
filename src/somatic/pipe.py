@@ -33,7 +33,7 @@ def vardict_somatic(tumorbam,
 
     tagvcf_cmd = "{scriptpath}/vardict_msi2.py {vardict_vcf} | "\
     "{scriptpath}/vcfaddtag.py -i - -d {gsvardictdb_vcf} -t TOTALAC,HAC,LAC | "\
-    "{scriptpath}/vcfaddtag.py -i - -d {cosmic_vcf} -t CNT  |"\
+    "{scriptpath}/vcfaddtag.py -i - -d {cosmic_vcf} -t CNT  "\
     "> {tagvcf}".format(scriptpath=config.get("ScriptPath", "SOMATIC"),vardict_vcf= vardict_vcf,
     gsvardictdb_vcf= config.get("AnnoVCF", "gsvardict"), cosmic_vcf=config.get("AnnoVCF", "Cosmic"),
     tagvcf=tagvcf)
@@ -52,7 +52,7 @@ def vardict_somatic(tumorbam,
     paramtagdic["raw_maf"] = raw_maf
     paramtagdic["scriptpath"] = config.get("ScriptPath", "SOMATIC")
     tagmaf_cmd = "{scriptpath}/tagmaf.py {raw_maf} {popfreq} {tumordepth} "\
-    "{tumoraltdepth} {normaldepth} {varqual} {MSIcount} {bias} {pmean} "\
+    "{tumoraltdepth} {normaldepth} {varqual} {msicount} {bias} {pmean} "\
     "{gsdptotalcount} {gsdptotallowafcount} {tumoraltdepthhotspot} "\
     "{gsdptotalcounthotspot} {gsdptotallowafcounthotspot} > {tag_maf}".format(**paramtagdic)
 
