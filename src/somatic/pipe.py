@@ -57,7 +57,7 @@ def vardict_somatic(tumorbam,
     "{gsdptotalcounthotspot} {gsdptotallowafcounthotspot} > {tag_maf}".format(**paramtagdic)
 
     script = open(scriptout, "w")
-    cmds = "\n".join([vardict_cmd, tagvcf_cmd, vcf2maf_cmd, tag_maf])
+    cmds = "\n".join([vardict_cmd, tagvcf_cmd, vcf2maf_cmd, tagmaf_cmd])
     print >> script, cmds
 
     script.close()
