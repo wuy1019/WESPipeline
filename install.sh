@@ -4,5 +4,11 @@
 #########################################################################
 #!/bin/bash
 ln -s src/Basic.py basic.py
-ln -s src/somatic/pipe.py somatic.py
-chmod 755 basic.py somatic.py
+
+
+
+# install somatic
+ln -s ../src/somatic/pipe.py bin/somatic.py
+chmod 755 src/somatic/maftag.py 
+chmod 755 src/somatic/vcfaddtag.py bin/somatic.py
+chmod 755 src/somatic/vardict_msi2.py

@@ -51,7 +51,7 @@ def vardict_somatic(tumorbam,
     paramtagdic["tag_maf"] = tag_maf
     paramtagdic["raw_maf"] = raw_maf
     paramtagdic["scriptpath"] = config.get("ScriptPath", "SOMATIC")
-    tagmaf_cmd = "{scriptpath}/tagmaf.py {raw_maf} {popfreq} {tumordepth} "\
+    tagmaf_cmd = "{scriptpath}/maftag.py {raw_maf} {popfreq} {tumordepth} "\
     "{tumoraltdepth} {normaldepth} {varqual} {msicount} {bias} {pmean} "\
     "{gsdptotalcount} {gsdptotallowafcount} {tumoraltdepthhotspot} "\
     "{gsdptotalcounthotspot} {gsdptotallowafcounthotspot} > {tag_maf}".format(**paramtagdic)
