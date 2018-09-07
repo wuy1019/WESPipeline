@@ -159,8 +159,9 @@ def vardict_somatic_cmd(tumorbam, normalbam, vardictjava, vardictperlpath, ref,
     outraw = "%s/raw" % outdir
     makedir(outraw)
     result = "{dir}/{tumorid}.vardict.vcf".format(tumorid=tumorid, dir=outraw)
-    cmd = "{vardictjava} -G {ref} -f {af} -N {tumorid} " \
-           "-b \"{tumorbam}|{normalbam}\" -z -c 1 -S 2 -E 3 " \
+    cmd = "{vardictjava} -G {ref} -N {tumorid} " \
+           "-b \"{tumorbam}|{normalbam}\" -f 0.01 -q 20 "\
+           "-Q 20  -t -f 0.01 -u   -m 4  -c 1 -S 2 -E 3  " \
            "-th {th} {intervals} | {vardictperlpath}/testsomatic.R " \
            "| {vardictperlpath}/var2vcf_paired.pl -N \"{tumorid}|{normalid}\" " \
            "-f {af} > {dir}/{tumorid}.vardict.vcf" \
