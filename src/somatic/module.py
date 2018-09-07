@@ -139,15 +139,8 @@ def scalpel(tumorbam,
     return cmds, result
 
 
-def vardict(tumorbam,
-            normalbam,
-            vardictjava,
-            vardictperlpath,
-            ref,
-            af,
-            intervals,
-            th,
-            outdir="Results/mutectv1"):
+def vardict_somatic_cmd(tumorbam, normalbam, vardictjava, vardictperlpath, ref,
+                        af, intervals, th, outdir):
 
     tumorid, normalid = map(bam2id, [tumorbam, normalbam])
     outraw = "%s/raw" % outdir
@@ -192,6 +185,23 @@ def facets(facetsR, snpdir, tumorid, outdir):
     result = "%s/%s.seg" % (outdir, tumorid)
     cmd = "Rscript %s %s %s %s" % (facetsR, snpdir, tumorid, outdir + "/")
     return cmd, result
+
+
+def vcf2maf_for_vardict(invcf, tumorid, normalid, vcf2maf, veppath, vepdata,
+                        ref, exacvcf, custom_enst, outmaf):
+
+    cmd = "perl %s --input-vcf %s --output-maf %s " \
+          "--tumor-id %s --normal-id %s " \
+          "--vcf-tumor-id TUMOR --vcf-normal-id CONTROL " \
+          "--retain-info AF,MSI,MSILEN,SSF,MSI2,ALD,SN,NM,"\
+          "MQ,PMEAN,SBF,CNT,TOTALAC,HAC,LAC --any-allele " \
+          "--vep-path %s --vep-data %s " \
+          "--ref-fasta %s " \
+          "--filter-vcf %s --custom-enst %s "%(
+        vcf2maf, invcf, outmaf, tumorid, normalid, veppath, vepdata, ref, exacvcf, custom_enst
+    )
+
+    return cmd, outmaf
 
 
 def vcfanno(invcf, tumorid, normalid, vcf2maf, veppath, vepdata, ref, exacvcf,

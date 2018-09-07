@@ -46,11 +46,35 @@ def popfiltered(frequency, poplis):
         return True
 
 
-def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean,
+
+
+
+def tagmaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean,
               totalAC, LAC, tad_hot, totalAC_hot, LAC_hot):
+    """maf file add tag for filter
+    
+    Arguments:
+        inmaf {[file]} -- [vcf2maf files]
+        popfreq {[float]} -- [pop freq threshold]
+        tdp {[int]} -- [description]
+        tad {[int]} -- [description]
+        ndp {[int]} -- [description]
+        varqual {[int]} -- [description]
+        MSI {[type]} -- [description]
+        bias {[type]} -- [description]
+        pmean {[type]} -- [description]
+        totalAC {[type]} -- [description]
+        LAC {[type]} -- [description]
+        tad_hot {[type]} -- [description]
+        totalAC_hot {[type]} -- [description]
+        LAC_hot {[type]} -- [description]
+        
+    """
 
     dic, header = txt2dic(inmaf, headidx=0, keyidx=[5, 6, 11, 13])
-    print "Commons\t" + "\t".join(header)
+
+    print "Commons\t"+"\t".join(header)
+
     for key, val in dic.items():
         commons = []
 
@@ -107,8 +131,8 @@ def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean,
         if Pmean < pmean:
             commons.append("PMEAN")
 
-        if (MQ < 55 and NM > 1) or (MQ < 60 and NM > 2):
-            commons.append("MQ_NM")
+        #if (MQ < 55 and NM > 1) or (MQ < 60 and NM > 2):
+        #    commons.append("MQ_NM")
 
         if hotspot:
             if talt < tad_hot:
@@ -124,10 +148,11 @@ def filtermaf(inmaf, popfreq, tdp, tad, ndp, varqual, MSI, bias, pmean,
         if not commons:
             commons.append("PASS")
 
+        tag = ";".join(commons)
+        dic[key]["Commons"] = tag
         lis = []
-        lis.append(";".join(commons))
-        for h in header:
-            lis.append(val[h])
+        for h in ["Commons"]+header:
+            lsi.append(val[h])
         print "\t".join(lis)
 
 
@@ -136,4 +161,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print "py inmaf"
         exit(1)
-    filtermaf(sys.argv[1], 0.01, 20, 4, 15, 70, 8, 0.1, 25, 20, 10, 3, 50, 20)
+    tagmaf(sys.argv[1], 0.01, 20, 4, 15, 70, 8, 0.1, 25, 20, 10, 3, 50, 20)
