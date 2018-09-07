@@ -94,7 +94,7 @@ def facetscnv(tumorbam, normalbam, inifile, scriptout,
 
     seg = "%s/%s.seg" % (outdir, tumorid)
     avinput = "%s/%s.avinput" % (outtmp, tumorid)
-    cmd4 = "%s/facets_filter.py %s %s.fai %s %s %s %s " % (
+    cmd4 = "python %s/facets_filter.py %s %s.fai %s %s %s %s " % (
         config.get("ScriptPath", "SOMATIC"), cnvseg,
         config.get("ReferenceFasta", "REFFASTA"),
         config.get("Parameters2FilterFacets", "gainlog2"),
@@ -106,7 +106,7 @@ def facetscnv(tumorbam, normalbam, inifile, scriptout,
                       config.get("Annovar", "AnnovarDB"))
 
     cnvanno = "%s/%s.tsv" % (outdir, tumorid)
-    cmd6 = "%s/combineCNV.py " \
+    cmd6 = "python %s/combineCNV.py " \
             "%s %s.hg19_multianno.txt " \
             "> %s "%(config.get("ScriptPath", "SOMATIC"),
                     avinput, avoutput, cnvanno)
@@ -152,7 +152,7 @@ def mutectv1snv(tumorbam,
 
     #filter
     filtervcf = "%s/%s-%s.vcf" % (outdir, tumorid, normalid)
-    cmd2 = "%s/vcfilter.py mutectv1 %s %s" % (config.get(
+    cmd2 = "python %s/vcfilter.py mutectv1 %s %s" % (config.get(
         "ScriptPath", "SOMATIC"), rawvcf, filtervcf)
 
     #anno
@@ -196,7 +196,7 @@ def scalpelindel(tumorbam,
 
     #filter
     filtervcf = "%s/%s.vcf" % (outdir, tumorid)
-    cmd2 = "%s/vcfilter.py scalpel %s %s %s %s " % (config.get(
+    cmd2 = "python %s/vcfilter.py scalpel %s %s %s %s " % (config.get(
         "ScriptPath", "SOMATIC"), rawvcf, filtervcf, tumorid, normalid)
 
     #anno
