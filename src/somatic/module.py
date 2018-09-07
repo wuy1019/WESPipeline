@@ -8,7 +8,7 @@
 import os
 
 import numpy as np
-import ConfigParser as configparser
+import ConfigParser
 from collections import defaultdict
 
 
@@ -30,10 +30,23 @@ def checkFile(fileToCheck):
 
 
 def readconfig(inifile):
-    config = configparser.ConfigParser()
+    config = Configparser.ConfigParser()
     config.read(inifile)
     config.read(config.get("common", "config"))
     return config
+
+class MyParser(ConfigParser.ConfigParser):
+    def as_dict(self):
+        d = dict(self._sections)
+        for k in d:
+            d[k] = dict(d[k])
+        return d
+
+def ini2dict(inifile):
+    cfg = MyParser()
+    cfg.read(inifile)
+    cfg.read(cfg.get("common", "config"))
+    return cfg.as_dict()
 
 
 def bam2id(bam):

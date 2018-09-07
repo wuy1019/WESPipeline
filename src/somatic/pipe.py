@@ -38,14 +38,29 @@ def vardict_somatic(tumorbam,
     gsvardictdb_vcf= config.get("AnnoVCF", "gsvardict"), cosmic_vcf=config.get("AnnoVCF", "Cosmic"),
     tagvcf=tagvcf)
 
-    raw_maf = "%s/%s.raw.maf"%tmpdir
-    vcf2maf_cmd, raw_maf = vcf2maf_for_vardict(tagvcf, tumorid, normalid, config.get("software", "vcf2maf"),
-    config.get("Vcf2maf", "VEPPATH"), config.get("Vcf2maf", "VEPDATA"), 
-    config.get("ReferenceFasta", "REFFASTA"), config.get("CorrectVCF", "EXACVCF"), 
-    config.get("Vcf2maf","ENST"), raw_maf)
+    raw_maf = "%s/%s.raw.maf" % (tmpdir, tumorid)
+    vcf2maf_cmd, raw_maf = vcf2maf_for_vardict(
+        tagvcf, tumorid, normalid, config.get("software", "vcf2maf"),
+        config.get("Vcf2maf", "VEPPATH"), config.get("Vcf2maf", "VEPDATA"),
+        config.get("ReferenceFasta", "REFFASTA"),
+        config.get("CorrectVCF", "EXACVCF"), config.get("Vcf2maf", "ENST"),
+        raw_maf)
 
-    tagmaf_cmd = "{scriptpath}/tagmaf.py "
-    pass
+    tag_maf = "%s/%s.tag.maf" % (outtmp, tumorid)
+    paramtagdic = ini2dict(inifile)["Parameters2tagmaf"]
+    paramtagdic["tag_maf"] = tag_maf
+    paramtagdic["raw_maf"] = raw_maf
+    paramtagdic["scriptpath"] = config.get("ScriptPath", "SOMATIC")
+    tagmaf_cmd = "{scriptpath}/tagmaf.py {raw_maf} {popfreq} {tumordepth} "\
+    "{tumoraltdepth} {normaldepth} {varqual} {MSIcount} {bias} {pmean} "\
+    "{gsdptotalcount} {gsdptotallowafcount} {tumoraltdepthhotspot} "\
+    "{gsdptotalcounthotspot} {gsdptotallowafcounthotspot} > {tag_maf}".format(**paramtagdic)
+
+    script = open(scriptout, "w")
+    cmds = "\n".join([vardict_cmd, tagvcf_cmd, vcf2maf_cmd, tag_maf])
+    print >> script, cmds
+
+    script.close()
 
 
 def facetscnv(tumorbam, normalbam, inifile, scriptout,
@@ -207,6 +222,8 @@ if __name__ == "__main__":
     snv = t[4] + ".snv.sh"
     indel = t[4] + ".indel.sh"
     cnv = t[4] + ".cnv.sh"
-    mutectv1snv(t[1], t[2], t[3], snv)
-    scalpelindel(t[1], t[2], t[3], indel)
+    vardict = t[4] + ".vardict.sh"
+    #mutectv1snv(t[1], t[2], t[3], snv)
+    #scalpelindel(t[1], t[2], t[3], indel)
     facetscnv(t[1], t[2], t[3], cnv)
+    vardict_somatic(t[1], t[2], t[3],vardict)

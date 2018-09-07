@@ -4,7 +4,7 @@
 # Copyright: GENESEEQ Technology Inc. All rights reserved.
 # Description:
 #########################################################################
-import ConfigParser as configparser
+import ConfigParser as Configparser
 
 import combineanno
 from module import *
